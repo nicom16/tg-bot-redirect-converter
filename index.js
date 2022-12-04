@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
         });
     }
     
-    res.send('Redirected!'); 
+    res.send(process.env.MANAGER); 
 }); 
   
 app.listen(PORT, () => { 
