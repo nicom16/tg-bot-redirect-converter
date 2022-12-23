@@ -6,10 +6,12 @@ const axios = require('axios');
 
 const ffmpeg = require('ffmpeg');
 
-const fs = require('fs');
+const functions = require('./functions.js');
 
 const PORT = process.env.PORT || 5000;
-  
+
+app.use(express.static('public'));
+
 app.get('/', (req, res) => {
     axios.get(process.env.MANAGER, {
         params: {
@@ -23,7 +25,30 @@ app.get('/', (req, res) => {
     });
 }); 
 
-app.get('/converter', (req, res) => {
+app.get('/converter', async (req, res) => {
+    const fs = require('fs');
+
+    var token = process.env.TOKEN;
+    var channel = process.env.CHANNEL;
+    var spec = req.query.spec;
+    
+    var get_file = "https://api.telegram.org/bot" + token + "/getFile?file_id=" + spec;
+    var send_message = "https://api.telegram.org/bot" + token + "/sendMessage";
+
+    var video_name = spec + ".mp4";
+
+    const link = await functions.getFile(get_file, token);
+    functions.downloadVideo(link, video_name)
+        .then(() => new ffmpeg("./public/" + video_name))
+        .then((video) => video.setDisableAudio())
+        .then((gif) => gif.save("./public/no-" + video_name))
+        .then((path) => console.log("Gif: " + path))
+        // .then(() => {
+        //     fs.unlink("./public/" + video_name, (err) => err);
+        //     fs.unlink("./public/no-" + video_name, (err) => err);
+        // })
+        .catch((err) => console.log("Errore: " + err));
+    
     res.send("Ok");
 });
 
