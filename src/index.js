@@ -12,6 +12,8 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.static('public'));
 
+app.get('/online', (req, res) => res.send("Online!"));
+
 app.get('/', (req, res) => {
     axios.get(process.env.MANAGER, {
         params: {
