@@ -41,15 +41,15 @@ app.get('/converter', async (req, res) => {
     var link = await bot.telegram.getFileLink(spec);
     
     functions.downloadVideo(link, video_name)
-        // .then(() => new ffmpeg("./public/" + video_name))
-        // .then((video) => video.setDisableAudio())
-        // .then((gif) => gif.save("./public/no-" + video_name))
-        // .then((path) => console.log("Gif: " + path))
-        // .then(() => {
-        //     fs.unlink("./public/" + video_name, (err) => err);
-        //     fs.unlink("./public/no-" + video_name, (err) => err);
-        // })
-        // .catch((err) => console.log("Errore: " + err));
+        .then(() => new ffmpeg("./public/" + video_name))
+        .then((video) => video.setDisableAudio())
+        .then((gif) => gif.save("./public/no-" + video_name))
+        .then((path) => console.log("Gif: " + path))
+        .then(() => {
+            fs.unlink("./public/" + video_name, (err) => err);
+            fs.unlink("./public/no-" + video_name, (err) => err);
+        })
+        .catch((err) => console.log("Errore: " + err));
     
     res.send("Ok");
 });
