@@ -1,12 +1,5 @@
 // Functions
 
-async function getFile(url, token) {
-    const axios = require('axios');
-
-    const response = await axios.get(url);
-    return "https://api.telegram.org/file/bot" + token + "/" + response.data.result.file_path;
-}
-    
 async function downloadVideo(url, name) {
     const axios = require('axios');
     const fs = require('fs');
@@ -21,6 +14,5 @@ async function downloadVideo(url, name) {
 }
 
 module.exports = {
-    getFile,
     downloadVideo
 }
