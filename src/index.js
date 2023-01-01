@@ -45,10 +45,10 @@ app.get('/converter', async (req, res) => {
         .then((video) => video.setDisableAudio())
         .then((gif) => gif.save("./public/no-" + video_name))
         .then((path) => console.log("Gif: " + path))
-        .then(() => {
-            fs.unlink("./public/" + video_name, (err) => err);
-            fs.unlink("./public/no-" + video_name, (err) => err);
-        })
+//        .then(() => {
+//            fs.unlink("./public/" + video_name, (err) => err);
+//            fs.unlink("./public/no-" + video_name, (err) => err);
+//        })
         .catch((err) => console.log("Errore: " + err));
     
     res.send("Ok");
