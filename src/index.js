@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
     });
 }); 
 
-app.get('del', async () => {
+app.get('/del', async () => {
   const fs = require("fs");
   const path = require("path");
 
