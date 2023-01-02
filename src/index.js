@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
     });
 }); 
 
-app.get('/del', async () => {
+/*app.get('/del', async () => {
   const fs = require("fs");
   const path = require("path");
 
@@ -46,7 +46,7 @@ app.get('/del', async () => {
   }
 });
 res.send("Done!");
-});
+});*/
 
 app.get('/converter', async (req, res) => {
     const fs = require('fs');
@@ -64,12 +64,9 @@ app.get('/converter', async (req, res) => {
         .then((gif) => gif.save("./public/no-" + video_name))
         .then(() => bot.telegram.sendAnimation(channel, process.env.RAILWAY_STATIC_URL + "/no-" + video_name, { caption: req.query.caption }))
 	.then((result) => {
-	    res.send(result);
-		if (result.ok) {
-                fs.unlink("./public/" + video_name, (err) => err);
-                fs.unlink("./public/no-" + video_name, (err) => err);
-		bot.telegram.sendMessage(req.query.chat_id, "Video convertito ed inviato sul canale!");
-	    } 
+            fs.unlink("./public/" + video_name, (err) => err);
+            fs.unlink("./public/no-" + video_name, (err) => err);
+	    bot.telegram.sendMessage(req.query.chat_id, "Video convertito ed inviato sul canale!");
 	})
         .catch((err) => console.log("Errore: " + err));
     
