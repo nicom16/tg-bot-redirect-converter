@@ -62,9 +62,10 @@ app.get('/converter', async (req, res) => {
         .then(() => new ffmpeg("./public/" + video_name))
         .then((video) => video.setDisableAudio())
         .then((gif) => gif.save("./public/no-" + video_name))
-        .then(() => bot.telegram.sendAnimation(channel, process.env.RAILWAY_STATIC_URL + "/no-" + video_name/*, { caption: req.query.caption }*/))
+        .then(() => bot.telegram.sendAnimation(channel, process.env.RAILWAY_STATIC_URL + "/no-" + video_name, { caption: req.query.caption }))
 	.then((result) => {
-	    if (result.ok) {
+	    res.send(result);
+		if (result.ok) {
                 fs.unlink("./public/" + video_name, (err) => err);
                 fs.unlink("./public/no-" + video_name, (err) => err);
 		bot.telegram.sendMessage(req.query.chat_id, "Video convertito ed inviato sul canale!");
@@ -72,7 +73,7 @@ app.get('/converter', async (req, res) => {
 	})
         .catch((err) => console.log("Errore: " + err));
     
-    res.send("Ok");
+    //res.send("Ok");
 });
 
 app.get('/pep', (req, res) => {
