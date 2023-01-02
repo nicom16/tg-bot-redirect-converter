@@ -30,24 +30,6 @@ app.get('/', (req, res) => {
     });
 }); 
 
-/*app.get('/del', async () => {
-  const fs = require("fs");
-  const path = require("path");
-
-  const directory = "public";
-
-  fs.readdir(directory, (err, files) => {
-  if (err) throw err;
-
-  for (const file of files) {
-    fs.unlink(path.join(directory, file), (err) => {
-      if (err) throw err;
-    });
-  }
-});
-res.send("Done!");
-});*/
-
 app.get('/converter', async (req, res) => {
     const fs = require('fs');
 
@@ -70,7 +52,7 @@ app.get('/converter', async (req, res) => {
 	})
         .catch((err) => console.log("Errore: " + err));
     
-    //res.send("Ok");
+    res.send("Ok");
 });
 
 app.get('/pep', (req, res) => {
