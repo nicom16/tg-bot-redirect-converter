@@ -45,6 +45,7 @@ app.get('/del', async () => {
     });
   }
 });
+res.send("Done!");
 });
 
 app.get('/converter', async (req, res) => {
