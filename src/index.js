@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 app.get('/converter', async (req, res) => {
     const fs = require('fs');
 
-    // var channel = process.env.CHANNEL;
+    var channel = process.env.CHANNEL;
     var spec = req.query.spec;
 
     var video_name = spec + ".mp4";
@@ -44,11 +44,13 @@ app.get('/converter', async (req, res) => {
         .then(() => new ffmpeg("./public/" + video_name))
         .then((video) => video.setDisableAudio())
         .then((gif) => gif.save("./public/no-" + video_name))
-        .then((path) => console.log("Gif: " + path))
-//        .then(() => {
-//            fs.unlink("./public/" + video_name, (err) => err);
-//            fs.unlink("./public/no-" + video_name, (err) => err);
-//        })
+        .then(() => bot.telegram.sendAnimation(channel, process.env.RAILWAY_STATIC_URL + "/no-" + video_name, "Kiaoo!"))
+	.then((result) => {
+	    if (result.ok) {
+                fs.unlink("./public/" + video_name, (err) => err);
+                fs.unlink("./public/no-" + video_name, (err) => err);
+	    } 
+	})
         .catch((err) => console.log("Errore: " + err));
     
     res.send("Ok");

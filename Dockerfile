@@ -13,5 +13,3 @@ COPY . .
 EXPOSE 8080
 
 CMD [ "npm", "start" ]
-
-ENV PORT=8080
