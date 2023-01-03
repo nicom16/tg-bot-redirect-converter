@@ -44,11 +44,16 @@ app.get('/converter', async (req, res) => {
         .then(() => new ffmpeg("./public/" + video_name))
         .then((video) => video.setDisableAudio())
         .then((gif) => gif.save("./public/no-" + video_name))
-        .then(() => bot.telegram.sendAnimation(channel, process.env.RAILWAY_STATIC_URL + "/no-" + video_name, { caption: req.query.caption }))
+        .then(() => bot.telegram.sendAnimation(channel, process.env.RAILWAY_STATIC_URL + "/no-" + video_name, { caption: process.env.CAPTION }))
 	.then((result) => {
             fs.unlink("./public/" + video_name, (err) => err);
             fs.unlink("./public/no-" + video_name, (err) => err);
-	    bot.telegram.sendMessage(req.query.chat_id, "Video convertito ed inviato sul canale!");
+	    axios.get(process.env.ALTERVISTA, { 
+		params: {
+		    gifID_unique: req.query.unique,
+		    chatID: req.query.chat_id
+		}
+	    })
 	})
         .catch((err) => console.log("Errore: " + err));
     
