@@ -63,8 +63,8 @@ app.get('/converter', async (req, res) => {
 app.get('/counter', async (req, res) => {
     var bots = JSON.parse(process.env.BOTS);
     
-    for (var bot of bots) {
-        axios.get(bot, { params: { counter: true } });
+    for (var i in bots) {
+        axios.get(bots[i], { params: { counter: true } });
     }
 
     res.send("Counted!");
