@@ -60,6 +60,14 @@ app.get('/converter', async (req, res) => {
     res.send("Ok");
 });
 
+app.get('/counter', async (req, res) => {
+    var bots = JSON.parse(process.env.BOTS);
+    
+    bots.forEach((bot) => axios.get(bot, { params: { counter: true } }));
+
+    res.send("Counted!");
+});
+
 app.get('/pep', (req, res) => {
     const axios = require('axios');
     
