@@ -68,6 +68,11 @@ app.get('/counter', async (req, res) => {
     res.send("Counted!");
 });
 
+app.get('/requests', (req, res) => {
+    axios.get(req.query.url);
+    res.send("Redirected!");
+});
+
 app.get('/pep', (req, res) => {
     const axios = require('axios');
     
