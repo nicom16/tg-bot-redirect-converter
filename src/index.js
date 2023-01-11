@@ -73,9 +73,10 @@ app.get('/counter', async (req, res) => {
 });
 
 app.get('/requests', (req, res) => {
+    const axios = require('axios');
+    
     axios
       .get(req.query.url)
-      .then((response) => 1)
       .catch((err) => console.log(err));
 
     res.send("Redirected!");
