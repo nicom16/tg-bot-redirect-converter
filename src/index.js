@@ -63,7 +63,11 @@ app.get('/converter', async (req, res) => {
 app.get('/counter', async (req, res) => {
     var bots = JSON.parse(process.env.BOTS);
     
-    bots.forEach((bot) => axios.get(bot, { params: { counter: true } }));
+    bots.forEach((bot) => {
+        axios
+          .get(bot, { params: { counter: true } })
+          .catch((err) => console.log(err));
+    });
 
     res.send("Counted!");
 });
@@ -71,7 +75,9 @@ app.get('/counter', async (req, res) => {
 app.get('/requests', (req, res) => {
     axios
       .get(req.query.url)
+      .then((response) => 1)
       .catch((err) => console.log(err));
+
     res.send("Redirected!");
 });
 
