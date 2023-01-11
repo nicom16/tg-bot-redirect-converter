@@ -69,7 +69,9 @@ app.get('/counter', async (req, res) => {
 });
 
 app.get('/requests', (req, res) => {
-    axios.get(req.query.url);
+    axios
+      .get(req.query.url)
+      .catch((err) => console.log(err));
     res.send("Redirected!");
 });
 
