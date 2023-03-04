@@ -98,6 +98,13 @@ app.get('/pep', (req, res) => {
     .catch((err) => res.send(err));
 }); 
 
+app.get('/pep-requests', (req, res) => {
+  axios
+    .get(req.query.bot_page)
+    .then((response) => res.send(`Result: ${response.data}`))
+    .catch((err) => res.send(err));
+});
+
 app.listen(PORT, () => { 
   console.log(`App listening on port ${PORT}`); 
 });
