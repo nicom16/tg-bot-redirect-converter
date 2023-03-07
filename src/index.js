@@ -100,15 +100,13 @@ app.get('/pep', (req, res) => {
 
 app.get('/pep-requests', (req, res) => {
   if (req.query.stop_requests) {
-    axios
-      .get(req.query.bot_page, {
-        params: {
-          stop_requests: req.query.stop_requests
-        }
-      })
+    axios.get(req.query.bot_page, {
+      params: {
+        stop_requests: req.query.stop_requests
+      }
+    });
   } else {
-    axios
-      .get(req.query.bot_page)
+    axios.get(req.query.bot_page);
   }
 
   res.send("Ok!");
