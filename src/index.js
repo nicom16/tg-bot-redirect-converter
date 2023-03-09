@@ -112,7 +112,7 @@ app.get('/pep-requests-off', (req, res) => {
   res.send("Ok!");
 });
 
-app.get('pep-array-test', (req, res) => {
+app.get('/pep-array-test', (req, res) => {
   var pep = JSON.parse(process.env.PEPON);
   pep.forEach((entry) => res.send(entry));
 });
