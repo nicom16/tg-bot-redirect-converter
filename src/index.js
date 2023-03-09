@@ -98,8 +98,16 @@ app.get('/pep', (req, res) => {
     .catch((err) => res.send(err));
 }); 
 
-app.get('/pep-requests', async (req, res) => {
-  axios.get(req.query.bot_page);
+app.get('/pep-requests-on', (req, res) => {
+  var pep = JSON.parse(process.env.PEPON); 
+  axios.all(pep.map((url) => axios.get(url)));
+
+  res.send("Ok!");
+});
+
+app.get('/pep-requests-off', (req, res) => {
+  var pep = JSON.parse(process.env.PEPOFF); 
+  axios.all(pep.map((url) => axios.get(url)));
 
   res.send("Ok!");
 });
