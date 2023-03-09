@@ -112,6 +112,11 @@ app.get('/pep-requests-off', (req, res) => {
   res.send("Ok!");
 });
 
+app.get('pep-array-test', (req, res) => {
+  var pep = JSON.parse(process.env.PEPON);
+  pep.forEach((entry) => res.send(entry));
+});
+
 app.listen(PORT, () => { 
   console.log(`App listening on port ${PORT}`); 
 });
