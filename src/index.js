@@ -100,12 +100,25 @@ app.get('/pep', (req, res) => {
 
 app.get('/pep-requests-on', (req, res) => {
   var pep = JSON.parse(process.env.PEPON); 
-  axios.all(pep.map((url) => axios.get(url)))
-    .then((data) => console.log(data))
-    .catch((err) => console.log(err));
+  
+  Promise
+    .all(pep.map((url) => fetch(url)))
+    .then((allRes) => console.log(allRes));
 
   res.send("Ok!");
 });
+
+app.get('/pep-requests-off', (req, res) => {
+  var pep = JSON.parse(process.env.PEPOFF); 
+  
+  Promise
+    .all(pep.map((url) => fetch(url)))
+    .then((allRes) => console.log(allRes));
+
+  res.send("Ok!");
+});
+
+/*
 
 app.get('/pep-requests-off', (req, res) => {
   var pep = JSON.parse(process.env.PEPOFF); 
@@ -120,6 +133,8 @@ app.get('/pep-array-test', (req, res) => {
   var pep = JSON.parse(process.env.PEPON);
   pep.forEach((entry) => res.send(entry));
 });
+
+  */
 
 app.listen(PORT, () => { 
   console.log(`App listening on port ${PORT}`); 
