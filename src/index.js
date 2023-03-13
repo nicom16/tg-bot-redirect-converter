@@ -101,7 +101,7 @@ app.get('/pep', (req, res) => {
 app.get('/pep-requests-on', (req, res) => {
   var pep = JSON.parse(process.env.PEPON); 
   
-  fetch(pep[req.query.index]);
+  axios.get(pep[req.query.index]);
   // Promise
   //   .all(pep.map((url) => fetch(url)))
   //   .then((allRes) => console.log(allRes));
@@ -112,7 +112,7 @@ app.get('/pep-requests-on', (req, res) => {
 app.get('/pep-requests-off', (req, res) => {
   var pep = JSON.parse(process.env.PEPOFF); 
   
-  fetch(pep[req.query.index]);
+  axios.get(pep[req.query.index]);
   // Promise
   //   .all(pep.map((url) => fetch(url)))
   //   .then((allRes) => console.log(allRes));
