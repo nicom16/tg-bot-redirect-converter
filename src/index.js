@@ -101,23 +101,26 @@ app.get('/pep', (req, res) => {
 app.get('/pep-requests-on', (req, res) => {
   var pep = JSON.parse(process.env.PEPON); 
   
-  axios.get(pep[req.query.index]);
+  axios
+    .get(pep[req.query.index])
+    .then(res.send("Ok!"));
   // Promise
   //   .all(pep.map((url) => fetch(url)))
   //   .then((allRes) => console.log(allRes));
 
-  res.send("Ok!");
 });
 
 app.get('/pep-requests-off', (req, res) => {
   var pep = JSON.parse(process.env.PEPOFF); 
   
-  axios.get(pep[req.query.index]);
+  axios
+    .get(pep[req.query.index])
+    .then(res.send("Ok!"));
   // Promise
   //   .all(pep.map((url) => fetch(url)))
   //   .then((allRes) => console.log(allRes));
 
-  res.send("Ok!");
+  // res.send("Ok!");
 });
 
 /*
