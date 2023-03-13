@@ -103,7 +103,7 @@ app.get('/pep-requests-on', (req, res) => {
   
   axios
     .get(pep[req.query.index])
-    .then(res.send("Ok!"));
+    .then((response) => res.send(`Ok: ${response}`));
   // Promise
   //   .all(pep.map((url) => fetch(url)))
   //   .then((allRes) => console.log(allRes));
@@ -115,7 +115,7 @@ app.get('/pep-requests-off', (req, res) => {
   
   axios
     .get(pep[req.query.index])
-    .then(res.send("Ok!"));
+    .then((response) => res.send(`Ok: ${response}`));
   // Promise
   //   .all(pep.map((url) => fetch(url)))
   //   .then((allRes) => console.log(allRes));
