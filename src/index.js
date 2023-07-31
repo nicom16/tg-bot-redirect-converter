@@ -31,6 +31,8 @@ app.get('/redirect', (req, res) => {
     .catch((err) => res.send(err));
 }); 
 
+
+// Main routes
 app.get('/converter', async (req, res) => {
   const fs = require('fs');
 
@@ -87,6 +89,8 @@ app.get('/requests', (req, res) => {
   }
 });
 
+
+// Routes for pep-app
 app.get('/pep', (req, res) => {
   axios
     .get(req.query.bot_page, {
@@ -104,10 +108,6 @@ app.get('/pep-requests-on', (req, res) => {
   axios
     .get(pep[req.query.index])
     .then((response) => res.send(`Ok: ${response}`));
-  // Promise
-  //   .all(pep.map((url) => fetch(url)))
-  //   .then((allRes) => console.log(allRes));
-
 });
 
 app.get('/pep-requests-off', (req, res) => {
@@ -116,30 +116,7 @@ app.get('/pep-requests-off', (req, res) => {
   axios
     .get(pep[req.query.index])
     .then((response) => res.send(`Ok: ${response}`));
-  // Promise
-  //   .all(pep.map((url) => fetch(url)))
-  //   .then((allRes) => console.log(allRes));
-
-  // res.send("Ok!");
 });
-
-/*
-
-app.get('/pep-requests-off', (req, res) => {
-  var pep = JSON.parse(process.env.PEPOFF); 
-  axios.all(pep.map((url) => axios.get(url)))
-    .then((data) => console.log(data))
-    .catch((err) => console.log(err));
-
-  res.send("Ok!");
-});
-
-app.get('/pep-array-test', (req, res) => {
-  var pep = JSON.parse(process.env.PEPON);
-  pep.forEach((entry) => res.send(entry));
-});
-
-  */
 
 app.listen(PORT, () => { 
   console.log(`App listening on port ${PORT}`); 
