@@ -1,13 +1,13 @@
 // Functions
 
-async function downloadVideo(url, path) {
+async function downloadFile(url, path) {
   const axios = require('axios');
   const fs = require('fs');
 
-  const video = await axios.get(url, { responseType: "stream" });
-  const stream = video.data.pipe(fs.createWriteStream(path));
+  const file = await axios.get(url, { responseType: "stream" });
+  const stream = file.data.pipe(fs.createWriteStream(path));
 
-  return await new Promise ((resolve, reject) => {
+  return new Promise ((resolve, reject) => {
     stream
       .on('finish', () => {
         console.log("Video downloaded!");
@@ -17,6 +17,22 @@ async function downloadVideo(url, path) {
   });
 }
 
+async function cleanDir(directory) {
+  const fs = require("fs");
+  const path = require("path");
+
+  const files = fs.readdirSync(directory);
+
+  for (const file of files) {
+    fs.unlinkSync(path.join(directory, file));
+  }
+  
+  console.log(`Cleaned directory: ${directory}`);
+
+  return;
+}
+
 module.exports = {
-  downloadVideo
+  downloadFile,
+  cleanDir  
 }

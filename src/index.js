@@ -2,12 +2,7 @@
 const express = require('express'); 
 const app = express(); 
 
-const { Telegraf } = require('telegraf');
-const bot = new Telegraf(process.env.UMORE_TOKEN);
-
 const PORT = 8080;
-
-app.use(express.static('public'));
 
 app.get('/', (req, res) => res.send("Online!"));
 
@@ -28,50 +23,36 @@ app.get('/redirect', (req, res) => {
 
 }); 
 
-app.get('/clean', (req, res) => {
-
-  const fs = require("fs");
-  const path = require("path");
-
-  const directory = "public";
-
-  fs.readdir(directory, (err, files) => {
-    if (err) throw err;
-
-    for (const file of files) {
-      fs.unlink(path.join(directory, file), (err) => {
-        if (err) throw err;
-      });
-    }
-  });
-
-  res.send("Cleaned public/ directory!");
-
-});
-
 app.get('/converter', (req, res) => {
+
+  const { exec } = require('child_process');
+  const { promisify } = require('util');
+  const promisifiedExec = promisify(exec);
 
   const functions = require('./functions.js');
   const fs = require('fs');
-  const ffmpeg = require('./ffmpeg/index.js');
+  const path = require('path');
   const axios = require('axios');    
 
-  const channel = process.env.UMORE_CHANNEL;
+  const { Telegraf } = require('telegraf');
+  const bot = new Telegraf(process.env.A_TOKEN);
+  
+  const channel = process.env.A_CHANNEL;
   const spec = req.query.spec;
 
   const videoName = spec + ".mp4";
-  const videoPath = "./public/" + videoName;
-  const gifPath = "./public/no-" + videoName;
+  const videoPath = path.join("converter", videoName);
+  const gifPath = path.join("converter", `no-${videoName}`);
   
-  bot.telegram.getFileLink(spec)
-    .then((url) => functions.downloadVideo(url, videoPath))
-    .then(() => new ffmpeg(videoPath))
-    .then((video) => video.setDisableAudio().setVideoCodec('copy').save(gifPath))
-    .then(() => bot.telegram.sendAnimation(channel, process.env.STATIC_URL + "/no-" + videoName, { caption: process.env.UMORE_CAPTION, parse_mode: "html" }))
+  functions.cleanDir("converter")
+    .then(() => bot.telegram.getFileLink(spec))
+    .then((url) => functions.downloadFile(url, videoPath))
+    .then(() => promisifiedExec(`ffmpeg -i ${videoPath} -c copy -an ${gifPath}`))
+    .then(() => bot.telegram.sendAnimation(channel, { source: gifPath }, { caption: req.query.caption, parse_mode: "html" }))
     .then(() => {
       fs.unlink(videoPath, (err) => err);
       fs.unlink(gifPath, (err) => err);
-      axios.get(process.env.UMORE_ALTERVISTA, { 
+      axios.get(process.env.A_ALTERVISTA, { 
         params: {
           gifID_unique: req.query.unique,
           chatID: req.query.chat_id
@@ -81,6 +62,65 @@ app.get('/converter', (req, res) => {
     .catch((err) => console.log(err));
 
   res.send("Ok");
+
+});
+
+app.get('/blur', (req, res) => {
+  
+  const { exec } = require('child_process');
+  const { promisify } = require('util');
+  const promisifiedExec = promisify(exec);
+  
+  const functions = require('./functions.js');
+  const { Telegraf } = require('telegraf');
+  const fs = require('fs');
+  const path = require('path');
+  const axios = require('axios');
+
+  const spec = req.query.spec;
+  if (req.query.name == "b") {
+    var bot = new Telegraf(process.env.B_TOKEN);
+    var channel = process.env.B_CHANNEL;
+    var altervista = process.env.B_ALTERVISTA;
+    var baseDirectory = "blur-b";
+  } else {
+    var bot = new Telegraf(process.env.C_TOKEN);
+    var channel = process.env.C_CHANNEL;
+    var altervista = process.env.C_ALTERVISTA;
+    var baseDirectory = "blur-c";
+  }
+  
+  const picName = spec + ".jpg";
+  const picPath = path.join(baseDirectory, picName);
+  const blurredPicPath = path.join(baseDirectory, `b-${picName}`);
+  
+  functions.cleanDir(baseDirectory)
+    .then(() => bot.telegram.getFileLink(spec))
+    .then((url) => functions.downloadFile(url, picPath))
+    .then(() => promisifiedExec(`identify ${picPath} | awk -F' ' '{ print $3 }'`))
+    .then((output) => {
+      const size = output.stdout.split('x');
+
+      if (size[0] >= size[1]) {
+        return promisifiedExec(`convert ${picPath} -gravity SouthEast -region 180x60+0+0 -blur 0x20 ${blurredPicPath}`);
+      } else {
+        return promisifiedExec(`convert ${picPath} -gravity SouthEast -region 370x90+0+0 -blur 0x20 ${blurredPicPath}`);
+      }
+    })
+    .then(() => console.log("Blurred!"))
+    .then(() => bot.telegram.sendPhoto(channel, { source: blurredPicPath }, { caption: req.query.caption, parse_mode: "html" }))
+    .then(() => {
+      fs.unlink(picPath, (err) => err);
+      fs.unlink(blurredPicPath, (err) => err);
+      axios.get(altervista, { 
+        params: {
+          unique_id: req.query.unique
+        }
+      })
+    })
+    .catch((err) => console.log(err));
+
+  res.send('Blurring!');
 
 });
 
